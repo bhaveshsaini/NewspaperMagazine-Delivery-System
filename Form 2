@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+ 
+namespace NewsPaper
+{
+    public partial class Form2 : Form
+    {
+    	public Form2()
+    	{
+        	InitializeComponent();
+    	}
+ 
+    	private void button4_Click(object sender, EventArgs e)
+    	{
+        	//generate bill form
+        	//creates the second form and displays it
+        	Form7 bill = new Form7();
+        	bill.ShowDialog();
+    	}
+ 
+    	private void button1_Click(object sender, EventArgs e)
+    	{
+        	//Add/Remove customer form
+ 
+        	//creates the third form and displays it
+        	Form3 customer = new Form3();
+        	customer.ShowDialog();
+    	}
+ 
+    	private void button3_Click(object sender, EventArgs e)
+    	{
+        	//Generate summary form
+ 
+        	//creates the fourth form and displays it
+        	Form4 summary = new Form4();
+        	summary.ShowDialog();
+    	}
+ 
+    	private void button2_Click(object sender, EventArgs e)
+    	{
+        	//Modify cstomers information form
+        	//creates the fifth form and displays it
+        	Form5 modify = new Form5();
+        	modify.ShowDialog();
+    	}
+    }
+}
