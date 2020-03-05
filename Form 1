@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+using System.Data.SQLite;
+using System.Security.Cryptography;
+ 
+ 
+namespace NewsPaper
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+    	{
+        	InitializeComponent();
+        	textBox2.PasswordChar = '*';
+        	textBox2.MaxLength = 20;
+       	
+    	}
+    	//Sha1 Encrpytion
+    	string base64(string input)
+    	{
+        	string base64Encoded;
+        	byte[] data = System.Text.ASCIIEncoding.ASCII.GetBytes(input);
+        	base64Encoded = System.Convert.ToBase64String(data);
+        	return base64Encoded;
+    	}
+    	private void button1_Click(object sender, EventArgs e)
+    	{
+        	SQLiteConnection myconn = new SQLiteConnection(@"Data Source = C:\Users\chick\Newspaper.db");
+        	SQLiteCommand myadap = new SQLiteCommand("SELECT * FROM users WHERE User = '" + textBox1.Text + "' AND Password ='"+base64(textBox2.Text)+"';", myconn);
+        	SQLiteDataReader myReader;
+ 
+        	try {
+        	
+            	myconn.Open();
+            	myReader = myadap.ExecuteReader();
+           	
+            	int count = 0;
+            	while (myReader.Read())
+            	{
+                	count = count + 1;
+            	}
+            	
+            	//checking to see if the employee name and id are valid
+            	if (count == 1)
+            	{
+               	
+                	//creates the second form and displays it
+                	Form2 f = new Form2();
+                	//  Hide();
+                	f.ShowDialog();
+                	myconn.Close();
+            	}
+            	else
+   	         {
+                	//print out if employee name and id are not correct
+                	MessageBox.Show("Username or Password Is Not Correct ...Please Try Again!");
+            	}
+ 
+ 
+        	}
+        	catch (Exception ex) {
+   	         MessageBox.Show(ex.Message);
+        	}
+        	}
+    	}
+    }
