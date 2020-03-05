@@ -1,0 +1,153 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SQLite;
+ 
+ 
+namespace NewsPaper
+{
+    public partial class Form3 : Form
+    {
+    	public Form3()
+    	{
+        	InitializeComponent();
+    	}
+ 
+    	private void button2_Click(object sender, EventArgs e)
+    	{
+ 
+        	String address = "";
+        	String number = "";
+            if (comboBox1.Text == "FedEx")
+        	{
+            	address = "777 FedEx Drive";
+            	number = "1800FedEx";
+ 
+        	}
+        	if (comboBox1.Text == "UPS")
+        	{
+            	address = "888 UPS Drive";
+            	number = "1800UPS";
+        	}
+        	if (comboBox1.Text == "USPS")
+        	{
+            	address = "999 USPS Drive";
+            	number = "1800USPS";
+        	}
+        	SQLiteConnection myconn = new SQLiteConnection(@"Data Source = C:\Users\chick\Newspaper.db");
+        	myconn.Open();
+        	SQLiteCommand cmd = myconn.CreateCommand();
+        	cmd.CommandText = "INSERT INTO carrier (CustomersName, CarrierName, CarrierAddress, CarrierNumber, Routes ) VALUES ('" + textBox1.Text + "','" + comboBox1.Text + "','" + address + "','" + number + "','" + comboBox2.Text + "');";
+       	
+ 
+        	try
+        	{
+             	
+            	//Checks to see if the textbox is empty prints out if it is not
+            	if (textBox1.Text == "" || textBox2.Text == "" || textBox3.Text == "" || comboBox1.SelectedItem == null || comboBox2.SelectedItem == null)
+            	{
+                	MessageBox.Show("Please Do Not Leave Field Empty");
+   	         }
+            	else
+            	{
+              	
+                	cmd.ExecuteNonQuery();
+                	myconn.Close();
+                	MessageBox.Show("Succesfully Imported");
+                	textBox1.Text = ""; textBox2.Text = ""; textBox3.Text = "";
+                	myconn.Close();
+            	}
+        	}
+        	catch (Exception ex)
+        	{
+            	MessageBox.Show(ex.Message);
+        	}
+    	}
+ 
+    	private void button1_Click(object sender, EventArgs e)
+    	{
+        	SQLiteConnection myconn = new SQLiteConnection(@"Data Source = C:\Users\chick\Newspaper.db");
+ 
+        	String check = "";
+        	if (radioButton1.Checked)
+        	{
+             	check = "Newspaper";
+        	}
+        	else if (radioButton2.Checked)
+        	{
+             	check = "Magazine";
+        	}
+        	myconn.Open();
+        	SQLiteCommand cmd = myconn.CreateCommand();
+        	cmd.CommandText = "INSERT INTO customers(CustomersName, Address, PhoneNumber, Subscription) VALUES('" + textBox1.Text + "', '" + textBox2.Text + "', '" + textBox3.Text + "', '" + check + "');";
+        	try
+        	{
+          	
+            	groupBox1.Visible = true;
+            	
+            	if (textBox1.Text == "" || textBox2.Text == "" || textBox3.Text == "" && (radioButton1.Checked ||radioButton2.Checked))
+            	{
+                	MessageBox.Show("Please Do Not Leave Field Empty");
+                }
+            	else
+            	{
+             	
+                	cmd.ExecuteNonQuery();
+                	myconn.Close();
+                	MessageBox.Show("Succesfully Imported");
+            	}
+ 
+        	}
+        	catch (Exception ex)
+        	{
+            	MessageBox.Show(ex.Message);
+        	}
+    	}
+ 
+    	private void button4_Click(object sender, EventArgs e)
+    	{
+        	SQLiteConnection myconn = new SQLiteConnection(@"Data Source = C:\Users\chick\Newspaper.db");
+        	SQLiteCommand cmd = new SQLiteCommand("DELETE FROM customers WHERE CustomerID = '"+textBox5.Text+"'; DELETE FROM carrier WHERE CustomerID ='" + textBox5.Text+"';", myconn);
+        	SQLiteDataReader myReader;
+           
+        	try
+        	{
+           	
+            	//Checks to see if the textbox is empty prints out if it is not
+            	if (textBox5.Text == "" )
+            	{
+                	MessageBox.Show("Please Do Not Leave The Field Empty!");
+            	}
+            	else
+    	  	  {
+                	myconn.Open();
+                	myReader = cmd.ExecuteReader();
+                	MessageBox.Show("Succesfully Deleted");
+            	}
+ 
+        	}
+            catch (Exception ex)
+        	{
+            	MessageBox.Show(ex.Message);
+        	}
+    	}
+ 
+    	private void textBox5_TextChanged(object sender, EventArgs e)
+    	{
+ 
+    	}
+ 
+    	private void Form3_Load(object sender, EventArgs e)
+    	{
+        	groupBox1.Hide();
+    	}
+    }
+}
+ 
+ 
