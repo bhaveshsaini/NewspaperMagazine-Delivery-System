@@ -1,0 +1,84 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SQLite;
+ 
+namespace NewsPaper
+{
+    public partial class Form7 : Form
+    {
+    	public Form7()
+    	{
+        	InitializeComponent();
+    	}
+ 
+    	private void button1_Click(object sender, EventArgs e)
+    	{
+ 
+        	SQLiteConnection myconn = new SQLiteConnection(@"Data Source = C:\Users\chick\Newspaper.db");
+        	SQLiteCommand cmd = myconn.CreateCommand();
+ 
+        	cmd.CommandText = "SELECT Bill, PayDay, Monthly FROM customers WHERE CustomerID = '" + textBox1.Text + "'";
+        	myconn.Open();
+        	SQLiteDataReader myReader;
+        	myReader = cmd.ExecuteReader();
+ 
+        	try
+        	{
+            	if (textBox1.Text == "")
+            	{
+                	MessageBox.Show("Please enter a value!");
+            	}
+           	 else
+            	{
+                	groupBox1.Visible = true;
+ 
+                	if (myReader.Read())
+                	{
+                    	label3.Text = (myReader["PayDay"].ToString());
+                    	label5.Text = (myReader["Bill"].ToString());
+                    	label7.Text = (myReader["Monthly"].ToString());
+                	}
+                	myReader.Close();
+            	}
+            	myconn.Close();
+            	
+        	}
+        	catch (Exception ex)
+        	{
+            	MessageBox.Show(ex.Message);
+        	}
+    	}
+ 
+    	private void Form7_Load(object sender, EventArgs e)
+    	{
+        	groupBox1.Hide();
+    	}
+ 
+    	private void button2_Click(object sender, EventArgs e)
+    	{
+        	//UPDATE customers SET PayDay = " + time.ToString(format) + "
+ 
+        	using (SQLiteConnection myconn = new SQLiteConnection(@"Data Source = C:\Users\chick\Newspaper.db"))
+        	{
+            	myconn.Open();
+            	var sql = "Update customers SET Bill = Bill - @pay WHERE customers.CustomerID = @cid;";
+            	using (var cmd = new SQLiteCommand(sql, myconn))
+            	{
+                    cmd.Parameters.AddWithValue("@cid", textBox1.Text);
+                    cmd.Parameters.AddWithValue("@pay", textBox2.Text);
+                	cmd.ExecuteNonQuery();
+                	MessageBox.Show("Successfully Updated");
+                	
+            	}
+        	}
+    	}
+    }
+}
+
