@@ -1,0 +1,99 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SQLite;
+ 
+namespace NewsPaper
+{
+    public partial class Form5 : Form
+    {
+    	public Form5()
+    	{
+        	InitializeComponent();
+    	}
+ 
+    	private void button1_Click(object sender, EventArgs e)
+    	{
+        	if (textBox1.Text == "")
+        	{
+            	MessageBox.Show("Please input an ID!");
+        	}
+        	else
+        	{
+            	comboBox1.Visible = true;
+            	label2.Visible = true;
+            	textBox2.Visible = true;
+            	button2.Visible = true;
+            	groupBox1.Visible = true;
+        	}
+    	}
+ 
+    	private void label2_Click(object sender, EventArgs e)
+    	{
+ 
+    	}
+ 
+    	private void groupBox1_Enter(object sender, EventArgs e)
+    	{
+       	
+    	}
+ 
+    	private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+    	{
+        	label2.Text = comboBox1.Text;
+    	}
+ 
+    	private void Form5_Load(object sender, EventArgs e)
+    	{
+        	comboBox1.Hide();
+        	label2.Hide();
+        	textBox2.Hide();
+        	button2.Hide();
+        	groupBox1.Hide();
+        	groupBox2.Hide();
+        	button3.Hide();
+    	}
+ 
+    	private void button2_Click(object sender, EventArgs e)
+    	{
+        	String change = comboBox1.Text;
+        	SQLiteConnection myconn = new SQLiteConnection(@"Data Source = C:\Users\chick\Newspaper.db");
+        	myconn.Open();
+        	SQLiteCommand cmd = myconn.CreateCommand();
+ 
+        	cmd.CommandText = "UPDATE customers SET " + change + " = '" + textBox2.Text + "' WHERE customers.CustomerID = " + textBox1.Text + ";";
+        	if(change == "CustomersName")
+        	{
+            	cmd.CommandText += "UPDATE carrier SET " + change + " = '" + textBox2.Text + "' WHERE carrier.CustomerID = " + textBox1.Text + ";";
+        	}
+        	cmd.ExecuteNonQuery();
+        	MessageBox.Show("Successfully Modified!");
+        	myconn.Close();
+    	}
+ 
+    	private void radioButton1_CheckedChanged(object sender, EventArgs e)
+    	{
+        	groupBox2.Visible = true;
+        	button3.Visible = true;
+    	}
+ 
+    	private void button3_Click(object sender, EventArgs e)
+    	{
+        	SQLiteConnection myconn = new SQLiteConnection(@"Data Source = C:\Users\chick\Newspaper.db");
+        	myconn.Open();
+        	SQLiteCommand cmd = myconn.CreateCommand();
+        	int hold = 1;
+        	cmd.CommandText = "UPDATE customers SET Hold = '" + hold + "'WHERE customers.CustomerID = " + textBox1.Text + "; UPDATE customers SET Date = '" + dateTimePicker1.Value.Date.ToString("MM/dd/yyyy") + "' WHERE customers.CustomerID = " + textBox1.Text + ";";
+        	cmd.ExecuteNonQuery();
+        	MessageBox.Show("Succesfully Imported");
+        	myconn.Close();
+    	}
+    }
+}
+ 
